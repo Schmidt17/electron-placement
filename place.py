@@ -67,15 +67,16 @@ def total_energy_numpy(electron_indices, site_positions):
 def random_rearrangement(config, N_sites):
 	success = False
 	while not success:
-		nudge_vector_x = np.random.randint(-nudge_size, nudge_size+1, size=config.shape)
-		nudge_vector_y = np.random.randint(-nudge_size, nudge_size+1, size=config.shape)
-		local_config = (np.copy(config) + nudge_vector_x + N_sites_per_dim * nudge_vector_y) % N_sites
+		nudge_vector_xy = np.random.randint(-nudge_size, nudge_size+1, size=config.shape[0] * 2)
+		# nudge_vector_y = np.random.randint(-nudge_size, nudge_size+1, size=config.shape)
+		# local_config = (np.copy(config) + nudge_vector_x + N_sites_per_dim * nudge_vector_y) % N_sites
+		local_config = (config + nudge_vector_xy[:N_electrons] + N_sites_per_dim * nudge_vector_xy[N_electrons:]) % N_sites
 		if len(np.unique(local_config)) == len(local_config):
 			success = True
 	return local_config
 
 # Structure-specific parameters
-N_sites_per_dim = 100
+N_sites_per_dim = 500
 lattice_spacing = 1.
 
 # Make the structure
@@ -83,11 +84,11 @@ site_positions = make_square_grid_positions(N_sites_per_dim, lattice_spacing)
 N_sites = len(site_positions)
 
 # General parameters
-N_electrons = 3
-hold_T_for = 10 * N_electrons
+N_electrons = 1024
+hold_T_for = 100#* N_electrons
 hold_T_until_succ = 10 * N_electrons
-nudge_size = 1
-N_options = 40
+nudge_size = 2
+N_options = 100
 
 # Plot options
 plot_every = None  # None means only plot on new lowest state

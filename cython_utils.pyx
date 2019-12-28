@@ -32,7 +32,7 @@ def total_energy(np.ndarray[DTYPE_int_t, ndim=1] electron_indices, np.ndarray[DT
 		for j in range(i + 1, N):
 			Etot += pair_potential_from_pos(pos[ind[i], 0], pos[ind[i], 1], pos[ind[j], 0], pos[ind[j], 1], -1.)
 
-	# add attractive potential at site 650
+	# add attractive potential of dopants
 	for i in prange(N, schedule="guided", nogil=True, num_threads=11):
 		for j in range(N):
 			if ind[i] != dind[j]:
